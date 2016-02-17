@@ -41,24 +41,55 @@
 	return a;
     }
 
+    window.test_translateXYToBlocki = function() {
+	var world = new World();
+	var data = [
+	    {out: 0, 'in': {x:0, y:0}},
+	    {out: 1, 'in': {x:0, y:1}},
+	    {out: 2, 'in': {x:-1, y:0}},
+	    {out: 3, 'in': {x:0, y:-1}},
+	    {out: 4, 'in': {x:1, y:0}},
+
+	    {out: 5, 'in': {x:0, y:2}},
+	    {out: 6, 'in': {x:-2, y:0}},
+	    {out: 7, 'in': {x:0, y:-2}},
+	    {out: 8, 'in': {x:2, y:0}},
+
+	    {out: 9, 'in': {x:-1, y:1}},
+	    {out: 10, 'in': {x:-1, y:-1}},
+	    {out: 11, 'in': {x:1, y:-1}},
+	    {out: 12, 'in': {x:1, y:1}}
+	];
+	for (var i = 0, l = data.length; i < l; i++) {
+	    var input = data[i].in;
+	    var output = data[i].out;
+	    var result = world.translateXYtoBlocki(input.x, input.y);
+	    if (result == output) {
+		console.log("PASS", input, output, result)
+	    } else {
+		console.log("FAIL", input, output, result)
+	    }
+	}
+    }
+
     window.test_translateBlockiToXY = function() {
 	var world = new World();
 	var data = [
-	    {'in': [0], out: {x:0, y:0}},
-	    {'in': [1], out: {x:0, y:1}},
-	    {'in': [2], out: {x:-1, y:0}},
-	    {'in': [3], out: {x:0, y:-1}},
-	    {'in': [4], out: {x:1, y:0}},
+	    {'in': 0, out: {x:0, y:0}},
+	    {'in': 1, out: {x:0, y:1}},
+	    {'in': 2, out: {x:-1, y:0}},
+	    {'in': 3, out: {x:0, y:-1}},
+	    {'in': 4, out: {x:1, y:0}},
 
-	    {'in': [5], out: {x:0, y:2}},
-	    {'in': [6], out: {x:-2, y:0}},
-	    {'in': [7], out: {x:0, y:-2}},
-	    {'in': [8], out: {x:2, y:0}},
+	    {'in': 5, out: {x:0, y:2}},
+	    {'in': 6, out: {x:-2, y:0}},
+	    {'in': 7, out: {x:0, y:-2}},
+	    {'in': 8, out: {x:2, y:0}},
 
-	    {'in': [9], out: {x:-1, y:1}},
-	    {'in': [10], out: {x:-1, y:-1}},
-	    {'in': [11], out: {x:1, y:-1}},
-	    {'in': [12], out: {x:1, y:1}}
+	    {'in': 9, out: {x:-1, y:1}},
+	    {'in': 10, out: {x:-1, y:-1}},
+	    {'in': 11, out: {x:1, y:-1}},
+	    {'in': 12, out: {x:1, y:1}}
 	];
 	for (var i = 0, l = data.length; i < l; i++) {
 	    var input = data[i].in;
