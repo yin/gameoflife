@@ -49,6 +49,12 @@
 	    {'in': [2], out: {x:-1, y:0}},
 	    {'in': [3], out: {x:0, y:-1}},
 	    {'in': [4], out: {x:1, y:0}},
+
+	    {'in': [5], out: {x:0, y:2}},
+	    {'in': [6], out: {x:-2, y:0}},
+	    {'in': [7], out: {x:0, y:-2}},
+	    {'in': [8], out: {x:2, y:0}},
+
 	    {'in': [9], out: {x:-1, y:1}},
 	    {'in': [10], out: {x:-1, y:-1}},
 	    {'in': [11], out: {x:1, y:-1}},
@@ -64,7 +70,6 @@
 		console.log("FAIL", input, output, result)
 	    }
 	}
-	return a;
     }
 
     window.addEventListener("load", function() {
@@ -111,6 +116,8 @@
 	}
 
 	this.translateBlockiToXY = function(index) {
+	    if (index == 0)
+		return {x: 0, y: 0}
 	    // Decide which quadrant this is
 	    var quadrant = this.calcBlockQuadrant(index);
 	    // Compute quadrant-local block-index
@@ -121,12 +128,12 @@
 	    // computing both ways, I am witholding for latter (or am I
 	    // lazy to go ahead and derive the formulas, you decide)
 	    var row = 0, si = 0
-	    for (; index > si; row++)
+	    for (; localBlocki > si; row++)
 		si = this.calcStartBlocki(row + 1) ;
 	    // Difference of index and row start-index is the Y coordinate (q.)
 	    // Difference of row number and Y coordinate is the X coordinate
-	    var y = index - si, x = row - y;
-	    return {x: x, y: y};
+	    var y = localBlocki - si, x = row - y;
+	    return this.calcXYFromQuadrantXY(x, y, quadrant);
 	}
 
 	/** returns quadrant (1-4) and XY rotated into position of quadrant 1 **/
@@ -140,8 +147,8 @@
 	    } else if (x >= 0 && y < 0) {
 		return {
 		    quadrant: 2,
-		    x: -y,
-		    y: x
+		    x: y,
+		    y: -x
 		}
 	    } else if (x < 0 && y <= 0) {
 		return {
@@ -163,7 +170,7 @@
 	}
 
 	this.calcBlockQuadrant = function(index) {
-	    return index % 4 + 1;
+	    return 4 - (index-1) % 4;
 	}
 
 	this.calcXYFromQuadrantXY = function(x, y, quadrant) {
@@ -174,8 +181,8 @@
 		}	
 	    } else if (quadrant == 2) {
 		return {
-		    x: -y,
-		    y: x
+		    x: y,
+		    y: -x
 		}
 	    } else if (quadrant == 3) {
 		return {
