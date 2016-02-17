@@ -16,7 +16,7 @@
 	return a.sort();
     }
 
-    window.test_translateXYtoBlocki = function() {
+    window.eval_translateXYtoBlocki = function() {
 	var world = new World();
 	var a = {};
 	var rows = 1
@@ -24,6 +24,44 @@
 	    for (var x = -rows; x <= rows; x++) {
 		a[x + ' ' + y] = 'bi:' + world.translateXYtoBlocki(x, y)
 		    + ' q:' + world.calcQuadrant(x, y).quadrant ;
+	    }
+	}
+	return a;
+    }
+
+    window.eval_translateBlockiToXY = function() {
+	var world = new World();
+	var a = {};
+	var maxi = 20;
+	for (var i = 0; i <= maxi; i++) {
+	    var xy = world.translateBlockiToXY(i);
+	    a[i] = 'x:' + xy.x + ',y:' + xy.y
+		+ ' q:' + world.calcBlockQuadrant(i) ;
+	}
+	return a;
+    }
+
+    window.test_translateBlockiToXY = function() {
+	var world = new World();
+	var data = [
+	    {'in': [0], out: {x:0, y:0}},
+	    {'in': [1], out: {x:0, y:1}},
+	    {'in': [2], out: {x:-1, y:0}},
+	    {'in': [3], out: {x:0, y:-1}},
+	    {'in': [4], out: {x:1, y:0}},
+	    {'in': [9], out: {x:-1, y:1}},
+	    {'in': [10], out: {x:-1, y:-1}},
+	    {'in': [11], out: {x:1, y:-1}},
+	    {'in': [12], out: {x:1, y:1}}
+	];
+	for (var i = 0, l = data.length; i < l; i++) {
+	    var input = data[i].in;
+	    var output = data[i].out;
+	    var result = world.translateBlockiToXY(i);
+	    if (result.x == output.x && result.y == output.y) {
+		console.log("PASS", input, output, result)
+	    } else {
+		console.log("FAIL", input, output, result)
 	    }
 	}
 	return a;
@@ -63,13 +101,36 @@
 	    var localBlocki = start + offset;
 	    // Now merge in the quadrant information by interleaving indexes of
 	    //  all quadrants
+	    //       7
+	    //     A 3 B
+	    //   6 2 0 4 8
+	    //     9 1 C
+	    //       5
 	    var blocki = localBlocki * 4 - q.quadrant + 1;
 	    return blocki;
 	}
 
+	this.translateBlockiToXY = function(index) {
+	    // Decide which quadrant this is
+	    var quadrant = this.calcBlockQuadrant(index);
+	    // Compute quadrant-local block-index
+	    var localBlocki = (index + quadrant - 1) / 4;
+	    // Now the tricky part, I avoided to solve yet - compute XY coords
+	    // from block-index. I've done the opposite computation by DP, so
+	    // I will mess now with that :D. There is an arithmetic way of
+	    // computing both ways, I am witholding for latter (or am I
+	    // lazy to go ahead and derive the formulas, you decide)
+	    var row = 0, si = 0
+	    for (; index > si; row++)
+		si = this.calcStartBlocki(row + 1) ;
+	    // Difference of index and row start-index is the Y coordinate (q.)
+	    // Difference of row number and Y coordinate is the X coordinate
+	    var y = index - si, x = row - y;
+	    return {x: x, y: y};
+	}
+
 	/** returns quadrant (1-4) and XY rotated into position of quadrant 1 **/
 	this.calcQuadrant = function(x, y) {
-            var r = {};
 	    if (x > 0 && y >=0) {
 		return {
 		    quadrant: 1,
@@ -99,6 +160,37 @@
 		x: 0,
 		y: 0
 	    }
+	}
+
+	this.calcBlockQuadrant = function(index) {
+	    return index % 4 + 1;
+	}
+
+	this.calcXYFromQuadrantXY = function(x, y, quadrant) {
+	    if (quadrant == 1) {
+		return {
+		    x: x,
+		    y: y
+		}	
+	    } else if (quadrant == 2) {
+		return {
+		    x: -y,
+		    y: x
+		}
+	    } else if (quadrant == 3) {
+		return {
+		    x: -x,
+		    y: -y
+		}
+	    } else if (quadrant == 4) {
+		return {
+		    x: -y,
+		    y: x
+		}
+	    } else return {
+		x: 0,
+		y: 0
+	    }	    
 	}
 
 	/** 
