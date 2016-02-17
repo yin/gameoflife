@@ -33,7 +33,7 @@
 	var world = new World();
 	var a = {};
 	var maxi = 20;
-	for (var i = 0; i <= maxi; i++) {
+	for (var i = 0; i <= maxi; i+=4) {
 	    var xy = world.translateBlockiToXY(i);
 	    a[i] = 'x:' + xy.x + ',y:' + xy.y
 		+ ' q:' + world.calcBlockQuadrant(i) ;
@@ -128,7 +128,7 @@
 	    // computing both ways, I am witholding for latter (or am I
 	    // lazy to go ahead and derive the formulas, you decide)
 	    var row = 0, si = 0
-	    for (; localBlocki > si; row++)
+	    for (var s; localBlocki >= (s = this.calcStartBlocki(row + 1)); row++)
 		si = this.calcStartBlocki(row + 1) ;
 	    // Difference of index and row start-index is the Y coordinate (q.)
 	    // Difference of row number and Y coordinate is the X coordinate
