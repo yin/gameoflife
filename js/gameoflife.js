@@ -178,8 +178,8 @@
 	    } else if (x >= 0 && y < 0) {
 		return {
 		    quadrant: 2,
-		    x: y,
-		    y: -x
+		    x: -y,
+		    y: x
 		}
 	    } else if (x < 0 && y <= 0) {
 		return {
@@ -190,8 +190,8 @@
 	    } else if (x <= 0 && y > 0) {
 		return {
 		    quadrant: 4,
-		    x: -y,
-		    y: x
+		    x: y,
+		    y: -x
 		}
 	    } else return {
 		quadrant: 0,
