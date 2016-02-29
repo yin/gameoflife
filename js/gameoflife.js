@@ -246,6 +246,14 @@
 	    return dp[row]
 	}
 	this.calcStartBlocki.dp = [];
+
+	this.calcStartBlocki = function(row) {
+	    return row*(row+1) / 2;
+	}
+	this.calcReverseBlockiStart = function(localBlocki) {
+	    var row = Math.floor(2*localBlocki)
+	    return {row:row, starti:this.calcStartBlocki(row)}
+	}
     }
 
     /** Game of Life Engine - does computate next frame **/
